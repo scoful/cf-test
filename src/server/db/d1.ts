@@ -8,7 +8,7 @@ import * as schema from "./schema";
  */
 export function getD1Database() {
   try {
-    const { env } = getCloudflareContext() as { env: CloudflareEnv };
+    const { env } = getCloudflareContext() as { env: any };
     if (!env?.DB) {
       throw new Error("D1 database binding not found");
     }
