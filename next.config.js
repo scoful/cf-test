@@ -17,6 +17,18 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  // Cloudflare Pages configuration
+  serverExternalPackages: ["@libsql/client"],
+
+  // Optimize for Cloudflare Workers
+  output: "standalone",
 };
 
 export default config;
+
+// Initialize OpenNext for development
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+if (process.env.NODE_ENV === "development") {
+  initOpenNextCloudflareForDev();
+}
