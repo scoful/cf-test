@@ -26,5 +26,7 @@ export interface CloudflareEnv {
   DB: D1Database;
   ASSETS: Fetcher;
   WORKER_SELF_REFERENCE: Fetcher;
-  // Add other bindings as needed
+  NEXTJS_ENV: string;
+  NODE_ENV: string;
+  DATABASE_URL: string;
 }
