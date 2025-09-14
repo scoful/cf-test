@@ -1,17 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "@/server/db";
+import { getD1Database } from "@/server/db";
 import { posts } from "@/server/db/schema";
 
 /**
- * API route to demonstrate database usage
- * Uses local SQLite in development, D1 in production
+ * API route to demonstrate D1 database usage
+ * Uses Cloudflare D1 database
  */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   try {
-    console.log("Using local SQLite database for development");
+    console.log("Using Cloudflare D1 database");
+    const db = getD1Database();
 
     switch (req.method) {
       case "GET":

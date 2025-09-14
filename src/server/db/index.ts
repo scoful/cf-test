@@ -1,29 +1,5 @@
-import { createClient, type Client } from "@libsql/client";
-import { drizzle } from "drizzle-orm/libsql";
-
-import { env } from "@/env";
-import * as schema from "./schema";
-
-/**
- * Cache the database connection in development. This avoids creating a new connection on every HMR
- * update.
- */
-const globalForDb = globalThis as unknown as {
-  client: Client | undefined;
-};
-
-/**
- * Create database client for local development (SQLite)
- */
-function createLocalClient(): Client {
-  const databaseUrl = env.DATABASE_URL ?? "file:./db.sqlite";
-  return createClient({ url: databaseUrl });
-}
-
-export const client = globalForDb.client ?? createLocalClient();
-if (env.NODE_ENV !== "production") globalForDb.client = client;
-
-export const db = drizzle(client, { schema });
+// For Cloudflare D1 deployment, we'll use D1 database directly
+// Local development will be handled separately
 
 // Export D1 utilities for Cloudflare Workers
 export { getD1Database } from "./d1";
