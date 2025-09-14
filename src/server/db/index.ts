@@ -16,7 +16,8 @@ const globalForDb = globalThis as unknown as {
  * Create database client for local development (SQLite)
  */
 function createLocalClient(): Client {
-  return createClient({ url: env.DATABASE_URL });
+  const databaseUrl = env.DATABASE_URL ?? "file:./db.sqlite";
+  return createClient({ url: databaseUrl });
 }
 
 export const client = globalForDb.client ?? createLocalClient();
