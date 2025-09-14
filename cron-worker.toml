@@ -1,0 +1,14 @@
+name = "cf-test-cron"
+main = "src/cron-worker.ts"
+compatibility_date = "2024-12-30"
+compatibility_flags = [
+  "nodejs_compat",
+]
+
+# Cron triggers for scheduled tasks
+[triggers]
+crons = ["* * * * *"]  # 每分钟执行一次
+
+# Environment variables
+[vars]
+MAIN_WORKER_URL = "https://cf-test.scoful.workers.dev"

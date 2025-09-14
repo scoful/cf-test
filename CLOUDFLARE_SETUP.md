@@ -63,11 +63,21 @@ pnpm run cf:preview
 pnpm run cf:deploy
 ```
 
-## 步骤 6: 测试部署
+## 步骤 6: 部署 Cron Worker (自动插入数据)
+
+```bash
+# 部署 cron worker
+pnpm run cron:deploy
+```
+
+**重要**: 部署主应用后，需要更新 `cron-worker.toml` 中的 `MAIN_WORKER_URL` 为你的实际 worker URL，然后重新部署 cron worker。
+
+## 步骤 7: 测试部署
 
 访问你的 Cloudflare Pages 域名，测试：
 - 创建新 Post
 - 查看 Posts 列表
+- 等待 1 分钟，查看是否有自动生成的 Posts（带有 "Auto-generated" 标签）
 - 检查数据是否正确保存到 D1 数据库
 
 ## 环境变量

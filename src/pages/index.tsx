@@ -123,9 +123,14 @@ export default function Home() {
           {/* Posts List */}
           <div className="mb-6 rounded-xl bg-white/10 p-6 backdrop-blur-sm">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-white">
-                Posts ({posts.length})
-              </h2>
+              <div>
+                <h2 className="text-xl font-semibold text-white">
+                  Posts ({posts.length})
+                </h2>
+                <p className="text-sm text-white/70">
+                  🤖 Auto-inserting every minute via Cron Trigger
+                </p>
+              </div>
               <button
                 onClick={fetchPosts}
                 disabled={loading}
@@ -136,16 +141,23 @@ export default function Home() {
             </div>
 
             {posts.length === 0 ? (
-              <p className="text-white/70">No posts found. Create one above!</p>
+              <p className="text-white/70">No posts found. Create one above or wait for the cron trigger!</p>
             ) : (
               <div className="space-y-3">
                 {posts.map((post) => (
                   <div key={post.id} className="rounded-lg bg-white/20 p-4">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h3 className="font-semibold text-white">
-                          {post.name}
-                        </h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-white">
+                            {post.name}
+                          </h3>
+                          {post.name.includes("Scheduled") && (
+                            <span className="rounded bg-blue-500 px-2 py-1 text-xs text-white">
+                              Auto-generated
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-white/70">
                           ID: {post.id} | Created:{" "}
                           {typeof post.createdAt === "number"
