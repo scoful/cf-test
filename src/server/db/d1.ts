@@ -8,7 +8,7 @@ import * as schema from "./schema";
  */
 export function getD1Database() {
   try {
-    const { env } = getCloudflareContext();
+    const { env } = getCloudflareContext() as { env: CloudflareEnv };
     if (!env?.DB) {
       throw new Error("D1 database binding not found");
     }
@@ -19,14 +19,4 @@ export function getD1Database() {
   }
 }
 
-/**
- * Type for Cloudflare environment with D1 binding
- */
-export interface CloudflareEnv {
-  DB: D1Database;
-  ASSETS: Fetcher;
-  WORKER_SELF_REFERENCE: Fetcher;
-  NEXTJS_ENV: string;
-  NODE_ENV: string;
-  DATABASE_URL: string;
-}
+// CloudflareEnv type is defined globally in cloudflare-env.d.ts
