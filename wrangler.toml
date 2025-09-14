@@ -21,25 +21,10 @@ service = "cf-test"
 [[d1_databases]]
 binding = "DB"
 database_name = "cf-test-db"
-database_id = "your-database-id-here"  # Will be replaced after creating D1 database
+database_id = "aa730d18-dac4-4fc8-b39d-cdf8e13913e2"
+migrations_dir = "drizzle"
 
 # R2 bucket for Next.js caching (optional)
 # [[r2_buckets]]
 # binding = "NEXT_INC_CACHE_R2_BUCKET"
 # bucket_name = "cf-test-cache"
-
-# Environment variables for production
-[env.production]
-name = "cf-test-production"
-
-[env.production.vars]
-NEXTJS_ENV = "production"
-NODE_ENV = "production"
-
-# Environment variables for staging
-[env.staging]
-name = "cf-test-staging"
-
-[env.staging.vars]
-NEXTJS_ENV = "staging"
-NODE_ENV = "production"

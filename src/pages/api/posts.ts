@@ -22,15 +22,12 @@ export default async function handler(
 
       case "POST":
         // Create a new post
-        const { name } = req.body;
+        const { name } = req.body as { name?: string };
         if (!name) {
           return res.status(400).json({ error: "Name is required" });
         }
 
-        const newPost = await db
-          .insert(posts)
-          .values({ name })
-          .returning();
+        const newPost = await db.insert(posts).values({ name }).returning();
 
         res.status(201).json({ post: newPost[0] });
         break;

@@ -20,8 +20,8 @@ export default function Home() {
       setLoading(true);
       const response = await fetch("/api/posts");
       if (!response.ok) throw new Error("Failed to fetch posts");
-      const data = await response.json();
-      setPosts(data.posts);
+      const data = (await response.json()) as { posts: Post[] };
+      setPosts(data.posts ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -53,60 +53,67 @@ export default function Home() {
     }
   };
 
-  // Trigger cleanup
-  const triggerCleanup = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/trigger/cleanup", { method: "POST" });
-      if (!response.ok) throw new Error("Failed to trigger cleanup");
-      alert("Cleanup triggered successfully!");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Trigger cleanup (commented out for initial D1 testing)
+  // const triggerCleanup = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await fetch("/trigger/cleanup", { method: "POST" });
+  //     if (!response.ok) throw new Error("Failed to trigger cleanup");
+  //     alert("Cleanup triggered successfully!");
+  //   } catch (err) {
+  //     setError(err instanceof Error ? err.message : "Unknown error");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchPosts();
+    void fetchPosts();
   }, []);
 
   return (
     <>
       <Head>
         <title>CF Test - D1 Database & Triggers</title>
-        <meta name="description" content="Test Cloudflare D1 database and triggers functionality" />
+        <meta
+          name="description"
+          content="Test Cloudflare D1 database and triggers functionality"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c] py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-white text-center mb-8">
-            CF Test - <span className="text-[hsl(280,100%,70%)]">D1 Database</span> & Triggers
+          <h1 className="mb-8 text-center text-4xl font-bold text-white">
+            CF Test -{" "}
+            <span className="text-[hsl(280,100%,70%)]">D1 Database</span> &
+            Triggers
           </h1>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <div className="mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
               Error: {error}
             </div>
           )}
 
           {/* Create Post Form */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Create New Post</h2>
+          <div className="mb-6 rounded-xl bg-white/10 p-6 backdrop-blur-sm">
+            <h2 className="mb-4 text-xl font-semibold text-white">
+              Create New Post
+            </h2>
             <form onSubmit={createPost} className="flex gap-4">
               <input
                 type="text"
                 value={newPostName}
                 onChange={(e) => setNewPostName(e.target.value)}
                 placeholder="Enter post name"
-                className="flex-1 px-4 py-2 rounded-lg bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:border-white/50"
+                className="flex-1 rounded-lg border border-white/30 bg-white/20 px-4 py-2 text-white placeholder-white/70 focus:border-white/50 focus:outline-none"
                 disabled={loading}
               />
               <button
                 type="submit"
                 disabled={loading || !newPostName.trim()}
-                className="bg-[hsl(280,100%,70%)] hover:bg-[hsl(280,100%,60%)] text-white font-bold py-2 px-6 rounded-lg disabled:opacity-50 transition-colors"
+                className="rounded-lg bg-[hsl(280,100%,70%)] px-6 py-2 font-bold text-white transition-colors hover:bg-[hsl(280,100%,60%)] disabled:opacity-50"
               >
                 {loading ? "Creating..." : "Create Post"}
               </button>
@@ -114,13 +121,15 @@ export default function Home() {
           </div>
 
           {/* Posts List */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-white">Posts ({posts.length})</h2>
+          <div className="mb-6 rounded-xl bg-white/10 p-6 backdrop-blur-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-white">
+                Posts ({posts.length})
+              </h2>
               <button
                 onClick={fetchPosts}
                 disabled={loading}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50 transition-colors"
+                className="rounded-lg bg-green-500 px-4 py-2 font-bold text-white transition-colors hover:bg-green-600 disabled:opacity-50"
               >
                 {loading ? "Loading..." : "Refresh"}
               </button>
@@ -131,16 +140,17 @@ export default function Home() {
             ) : (
               <div className="space-y-3">
                 {posts.map((post) => (
-                  <div key={post.id} className="bg-white/20 rounded-lg p-4">
-                    <div className="flex justify-between items-start">
+                  <div key={post.id} className="rounded-lg bg-white/20 p-4">
+                    <div className="flex items-start justify-between">
                       <div>
-                        <h3 className="font-semibold text-white">{post.name}</h3>
+                        <h3 className="font-semibold text-white">
+                          {post.name}
+                        </h3>
                         <p className="text-sm text-white/70">
-                          ID: {post.id} | Created: {
-                            typeof post.createdAt === 'number'
-                              ? new Date(post.createdAt * 1000).toLocaleString()
-                              : new Date(post.createdAt).toLocaleString()
-                          }
+                          ID: {post.id} | Created:{" "}
+                          {typeof post.createdAt === "number"
+                            ? new Date(post.createdAt * 1000).toLocaleString()
+                            : new Date(post.createdAt).toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -150,7 +160,8 @@ export default function Home() {
             )}
           </div>
 
-          {/* Trigger Actions */}
+          {/* Trigger Actions - Commented out for initial D1 testing */}
+          {/*
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Trigger Actions</h2>
             <div className="space-x-4">
@@ -166,6 +177,7 @@ export default function Home() {
               These actions will work when deployed to Cloudflare Workers with triggers configured.
             </p>
           </div>
+          */}
         </div>
       </main>
     </>

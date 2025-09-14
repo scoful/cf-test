@@ -1,6 +1,6 @@
-# Cloudflare D1 和触发器设置指南
+# Cloudflare D1 数据库部署指南
 
-本指南将帮助你设置 Cloudflare D1 数据库和触发器功能。
+本指南将帮助你部署带有 D1 数据库的 Next.js 应用到 Cloudflare Pages。
 
 ## 前置条件
 
@@ -22,7 +22,7 @@ pnpm run cf:d1:create
 
 ## 步骤 2: 更新配置文件
 
-1. 将步骤 1 中获得的数据库 ID 更新到 `wrangler.toml` 和 `wrangler-trigger.toml` 中：
+1. 将步骤 1 中获得的数据库 ID 更新到 `wrangler.toml` 中：
 
 ```toml
 [[d1_databases]]
@@ -34,11 +34,14 @@ database_id = "your-actual-database-id-here"  # 替换为实际的 ID
 ## 步骤 3: 运行数据库迁移
 
 ```bash
+# 首先生成迁移文件（如果还没有）
+pnpm run db:generate
+
 # 本地迁移（用于测试）
-pnpm run cf:d1:migrate
+wrangler d1 migrations apply cf-test-db --local
 
 # 生产环境迁移
-pnpm run cf:d1:migrate:prod
+wrangler d1 migrations apply cf-test-db --remote
 ```
 
 ## 步骤 4: 本地开发测试
@@ -60,20 +63,12 @@ pnpm run cf:preview
 pnpm run cf:deploy
 ```
 
-## 步骤 6: 部署触发器 Worker
+## 步骤 6: 测试部署
 
-```bash
-# 使用触发器配置文件部署 Worker
-pnpm wrangler deploy --config wrangler-trigger.toml
-```
-
-## 步骤 7: 设置触发器路由（可选）
-
-如果你想通过 HTTP 请求触发 Worker：
-
-1. 在 Cloudflare Dashboard 中设置自定义域名
-2. 更新 `wrangler-trigger.toml` 中的路由配置
-3. 重新部署触发器 Worker
+访问你的 Cloudflare Pages 域名，测试：
+- 创建新 Post
+- 查看 Posts 列表
+- 检查数据是否正确保存到 D1 数据库
 
 ## 环境变量
 
@@ -100,13 +95,12 @@ pnpm wrangler secret put DATABASE_URL
 - `pnpm run cf:d1:create` - 创建 D1 数据库
 - `pnpm run cf:d1:migrate` - 本地数据库迁移
 - `pnpm run cf:d1:migrate:prod` - 生产环境数据库迁移
-- `pnpm run cf:d1:console` - D1 数据库控制台
 
 ## 测试功能
 
-1. **数据库操作**: 访问 `/test-d1` 页面测试 CRUD 操作
+1. **数据库操作**: 访问首页测试 CRUD 操作
 2. **API 端点**: 测试 `/api/posts` 端点
-3. **触发器**: 部署后可通过 `/trigger/*` 端点测试触发器
+3. **本地 vs 生产**: 本地使用 SQLite，生产使用 D1
 
 ## 故障排除
 

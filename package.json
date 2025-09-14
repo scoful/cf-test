@@ -24,8 +24,7 @@
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "cf:d1:create": "wrangler d1 create cf-test-db",
     "cf:d1:migrate": "wrangler d1 migrations apply cf-test-db --local",
-    "cf:d1:migrate:prod": "wrangler d1 migrations apply cf-test-db",
-    "cf:d1:console": "wrangler d1 execute cf-test-db --command=\"SELECT * FROM sqlite_master WHERE type='table';\""
+    "cf:d1:migrate:prod": "wrangler d1 migrations apply cf-test-db"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
